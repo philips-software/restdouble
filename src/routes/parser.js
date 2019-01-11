@@ -5,25 +5,17 @@ const url = require('url');
 const PATH_VARIABLE_PREFIX = ':';
 const PATH_VARIABLE_SEGMENT = ':ANY';
 
-class Query {
-    constructor(segments, search) {
-        this.segments = segments; // path segments
-        this.search = search; // query string
-    }
-}
-
 function parsePath(path) {
     let parsed = {};
     try {
         parsed = url.parse(path, true);
     } catch (err) {
         console.error(err.message);
+        return [];
     }
 
-    const pathname = parsed.pathname;
-    const search = parsed.search || '';
-
     let splitted = [];
+    const pathname = parsed.pathname;
     if (pathname) {
         splitted = pathname.split('/');
     }
@@ -36,7 +28,7 @@ function parsePath(path) {
         }
     }
 
-    return new Query(segments, search);
+    return segments;
 }
 
 function getSegment(segment) {

@@ -1,10 +1,13 @@
 'use strict';
 
+const methods = require('./methods');
+
 class Route {
 
-    static createRoute(obj) {
+    static create(obj) {
         const route = new Route();
         route.path = obj['path'] || '/';
+        route.method = methods.resolve(obj['method']);
         route.status = obj['status'] || 200;
         route.file = obj['file'];
         route.response = obj['response'];

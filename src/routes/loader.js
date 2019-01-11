@@ -9,9 +9,8 @@ function loadRoutes(filePath) {
         const doc = yaml.safeLoad(fs.readFileSync(filePath, 'utf8'));
         const routes = [];
 
-        console.log('Creating routes..');
         for (let index in doc) {
-            const route = Route.createRoute(doc[index]);
+            const route = Route.create(doc[index]);
             routes.push(route);
         }
         return routes;
@@ -22,7 +21,7 @@ function loadRoutes(filePath) {
 }
 
 function defaultRoutes() {
-    const route = Route.createRoute({ 'response': 'RestDouble Service' });
+    const route = Route.create({ 'response': 'RestDouble Service' });
     const routes = [];
     routes.push(route);
     return routes;

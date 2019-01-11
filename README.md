@@ -19,13 +19,18 @@ Run a fake REST service to use as a [test double](https://martinfowler.com/bliki
         - path: /static/img.png
           file: ./myfiles/img.png
         - path: /api/users/1
+          method: GET
           response: {"id": 1, "name": "user1"}
+        - path: /api/users/1
+          method: PUT
+          response: {"id": 1, "name": "user1", "status": "updated"}
         - path: /api/users
           response: [{"id": 1, "name": "user1"}, {"id": 2, "name": "user2"}] 
 
 Each item defines a route, which can have the following keys: 
 
         path: REST resource defining the route (default: '/')
+        method: HTTP method name (default: 'ANY')
         status: HTTP response code (default: 200)
         file: Path to a file to be served
         response: String or JSON object to be served
@@ -45,7 +50,7 @@ By default the server starts on **localhost:3000**. You can start the server on 
 
 Now you can access all the routes defined in your API description. For instance, the curl command below:
 
-    curl --request GET http://localhost:3000/api/users/
+    curl --request GET http://localhost:3000/api/users
 
 returns: 
 
@@ -59,12 +64,12 @@ returns:
     }]
 
 
-You can access a route using any HTTP method unless you customize this behavior by defining a hook method. See the relevant [section](#define-hook-methods) for an example.
+You can access a route using any HTTP method unless you restrict this behaviour by defining a HTTP method in the API description file. 
 
 
 ## Use URL Variables
 
-You can define a URL variable starting a segment with a colon ':'. 
+You can define a URL variable starting a segment with a colon ':'. You can then substitue the URL variable with any string when making an HTTP request. 
 
     - path: /api/users/:userid/friends
       response: [{"id": 3, "name": "user3"}, {"id": 4, "name": "user4"}]
@@ -81,40 +86,35 @@ Below, you can see an example:
 In your API description file, set your method names as values to the hook keys.
 
     # api.yaml
+    - path: /api/auth
+      method: GET
+      hook: token
     - path: /api/users/:userid/status
       hook: status
-    - path: /api/auth
-      hook: token
 
 Define and export functions in a JavaScript file.
 
     // hooks.js
-    function status(request, response) {
-        if (request.method === 'PUT') {
-             response.writeHead(200, { 'Content-Type': 'application/json' };
-             response.write(JSON.stringify({ 'status': 'active' }));
-        } else if (request.method === 'GET') {
-             response.writeHead(200, { 'Content-Type': 'application/json' };
-             response.write(JSON.stringify({ 'status': 'inactive' }));
-        } else {
-             response.writeHead(405, { 'Content-Type': 'text/plain' });
-        }
-        response.end();
-    }
-
     function token(request, response) {
-        if (request.method !== 'GET') {
-            response.writeHead(405, { 'Content-Type': 'text/plain' });
-        } else {
-            response.writeHead(200, { 'Content-Type': 'text/plain' });
-            response.write(QxoXtkmYk5);
-        }
+        response.writeHead(200, { 'Content-Type': 'text/plain' });
+        response.write(QxoXtkmYk5);
         response.end();
     }
 
-    exports.status = status;
-    exports.token = token;
+    function status(request, response) {
+        var authHeader = request.headers['Authorization'];
+        if (authHeader !== 'Bearer QxoXtkmYk5') {
+             response.writeHead(401);
+        } else if (request.method === 'GET') {
+             response.writeHead(200, { 'Content-Type': 'application/json' });
+             response.write(JSON.stringify({ 'status': 'active' }));
+        } 
+        response.end();
+    }
 
+    exports.token = token;
+    exports.status = status;
+    
 
 Then, start a server passing hooks file as a parameter.
 
@@ -122,27 +122,23 @@ Then, start a server passing hooks file as a parameter.
 
 ## Use Query Strings
 
-You can define routes with static query strings. 
-
-    - path: /api/users?offset=0&size=2
-      response: [{"id": 1, "name": "user1"}, {"id": 2, "name": "user2"}]
-    - path: /api/users?offset=2&size=2
-      response: [{"id": 3, "name": "user3"}, {"id": 4, "name": "user4"}]
-
-
-If you need dynamic behavior you can use a hook method.    
+If you need dynamic behavior based on query strings, you can use a hook method.    
 
     // hooks.js
-    function handleUsers(request, response) {
-        var http = require('http'),
-        url = require('url');
+    function getUsers(request, response) {
+        var url = require('url');
 
         var query = url.parse(req.url, true).query;
         // now parameters can be accessed as properties of the 'query' object
-        // ... 
+
+        var data = [..];
+
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify(data.slice(query.start, query.end)));
+        response.end();
     } 
 
-    exports.handleUsers = handleUsers;
+    exports.getUsers = getUsers;
 
 ## Command Line Interface
 

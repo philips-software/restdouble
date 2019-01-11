@@ -5,14 +5,12 @@
   response: <html><body>Lorem Ipsum</body></html>
 - path: /static/img.png
   file: ./test/fixtures/test.png
-- path: /auth
-  response: {"token": "QxoXtkmYk5"}
 - path: /api/users/1
   response: {"id": 1, "name": "user1"}
 - path: /api/users/2
   response: {"id": 2, "name": "user2"}
-- path: /api/users/3
-  hook: foo
+- path: /api/users/3/status
+  hook: status
 - path: /api/users/5
   status: 404
   response: {"msg": "user does not exist"}
@@ -21,9 +19,4 @@
 - path: /api/users/:userid/friends
   response: [{"id": 3, "name": "user3"}, {"id": 4, "name": "user4"}]
 - path: /api/users
-  response: [{"id": 1, "name": "user1"}, {"id": 2, "name": "user2"},
-             {"id": 3, "name": "user3"}, {"id": 4, "name": "user4"}]
-- path: /api/users?offset=0&size=2
-  response: [{"id": 1, "name": "user1"}, {"id": 2, "name": "user2"}]
-- path: /api/users?offset=2&size=2
-  response: [{"id": 3, "name": "user3"}, {"id": 4, "name": "user4"}]
+  hook: paging

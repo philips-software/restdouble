@@ -1,15 +1,15 @@
 'use strict';
 
 const parser = require('./parser');
+const methods = require('./methods');
 
 const ROOT_SEGMENT = '/';
-const EMPTY_SEARCH = '';
 
 class TreeNode {
     constructor(segment) {
         this.segment = segment || ROOT_SEGMENT;
-        this.routes = {}; // key: query (search) string, value: Route
         this.nodes = {}; // key: segment, value: TreeNode
+        this.routes = {}; // key: http method, value: Route
     }
 
     has(segment) {
@@ -25,13 +25,14 @@ class TreeNode {
         return this.nodes[segment];
     }
 
-    setRoute(route, search) {
-        this.routes[search || EMPTY_SEARCH] = route;
+    setRoute(route) {
+        const method = route.method;
+        this.routes[method] = route;
         return route;
     }
 
-    getRoute(search) {
-        return this.routes[search] || this.routes[EMPTY_SEARCH];
+    getRoute(method) {
+        return this.routes[method] || this.routes[methods.ANY_METHOD];
     }
 
     size() {
@@ -48,25 +49,21 @@ class RouteTree {
         }
 
         for (let i = 0, len = routes.length; i < len; i++) {
-            const route = routes[i];
-            addRouteToTree(root, route);
+            addRouteToTree(root, routes[i]);
         }
         return root;
     }
 
-    static findRoute(root, path) {
-        if (typeof (path) == 'undefined' || path == null) {
+    static findRoute(root, path, method) {
+        if (typeof (path) === 'undefined' || path == null) {
             return null;
         }
         if (path === '' || path === '/') {
-            return root.getRoute();
+            return root.getRoute(method);
         }
 
-        var current = root;
-        const query = parser.parsePath(path);
-        const segments = query.segments;
-        const search = query.search;
-
+        let current = root;
+        const segments = parser.parsePath(path);
         const len = segments.length;
         let index = 0;
         while (index < len && current) {
@@ -82,35 +79,31 @@ class RouteTree {
             index++;
         }
 
-        return (index > 0) ? current.getRoute(search) : null;
+        return (index > 0) ? current.getRoute(method) : null;
     }
 }
 
 function addRouteToTree(root, route) {
-    if (route.path === '/') {
+    if (route.path === ROOT_SEGMENT) {
         root.setRoute(route);
         return;
     }
 
-    var current = root;
-    const query = parser.parsePath(route.path);
-    const segments = query.segments;
-    const search = query.search;
-
+    let current = root;
+    const segments = parser.parsePath(route.path);
     const len = segments.length;
     let index = 0;
     while (index < len) {
         const segment = segments[index];
+
         if (!current.has(segment)) {
-            const node = new TreeNode(segment);
-            current.addNode(node);
+            current.addNode(new TreeNode(segment));
         }
         current = current.getNode(segment);
         index++;
     }
 
-    current.setRoute(route, search);
+    current.setRoute(route);
 }
-
 
 module.exports = RouteTree;

@@ -55,12 +55,12 @@ function setCORSHeaders(response) {
 function serveRequest(tree, hooks, cors) {
     return function (request, response) {
         try {
-            console.log(`Request received for ${request.url}`);
+            console.log(`${request.method} request received for ${request.url}`);
             if (cors) {
                 setCORSHeaders(response);
             }
 
-            const route = RouteTree.findRoute(tree, request.url);
+            const route = RouteTree.findRoute(tree, request.url, request.method);
             if (!route) {
                 notFound(request, response);
             } else if (route.hook) {

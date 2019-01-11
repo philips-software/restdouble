@@ -1,0 +1,34 @@
+- path: /
+  method: GET
+  status: 200
+  response: Lorem Ipsum
+- path: /api/users/1
+  method: POST
+  status: 201
+  response: {"id": 1, "name": "user1"}
+- path: /api/users/1
+  method: GET
+  response: {"id": 1, "name": "user1"}
+- path: /api/users/1
+  method: PUT
+  response: {"id": 1, "name": "user1", "status": "updated"}
+- path: /api/users/1
+  method: PATCH
+  response: {"id": 1, "name": "user1", "status": "updated"}
+- path: /api/users/3
+  method: GET
+  status: 404
+  response: {"msg": "user does not exist"}
+- path: /api/users/:userid
+  method: GET
+  response: {"id": 1, "name": "user1"}
+- path: /api/users
+  response: [{"id": 1, "name": "user1"}, {"id": 2, "name": "user2"}]
+- path: /api/users
+  method: POST
+  status: 201
+  response: {"id": 3, "name": "user3"}
+- path: /api/users
+  method: DELETE
+  status: 204
+  response: {}

@@ -1,8 +1,8 @@
 const http = require('http');
 const fileSystem = require('fs');
 
-const { loadRoutes, defaultRoutes } = require('../routes/loader');
 const RouteTree = require('../routes/routeTree');
+const { loadRoutes, defaultRoutes } = require('../routes/loader');
 const { serveRequest } = require('./handler');
 
 let server;
@@ -10,6 +10,7 @@ let server;
 function createRouteTree(apiFile) {
     var routes = [];
     if (apiFile) {
+        console.log('Creating routes..');
         routes = loadRoutes(apiFile);
         if (routes.length === 0) {
             console.error(`No routes loaded from ${apiFile}, exiting restdouble..`);
