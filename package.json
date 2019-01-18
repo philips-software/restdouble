@@ -2,7 +2,7 @@
   "name": "restdouble",
   "version": "0.0.1",
   "main": "./bin/cli.js",
-  "description": "A tool to create fake REST services to use as a test double or as a backend for rapid frontend prototyping.",
+  "description": "A tool to create fake REST services to be used as a test double or as a backend for rapid frontend prototyping.",
   "repository": "philips-software/restdouble",
   "preferGlobal": true,
   "scripts": {
