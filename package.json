@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "commander": "^2.19.0",
-    "js-yaml": "^3.12.0"
+    "js-yaml": "^3.13.1"
   },
   "devDependencies": {
     "async": "^2.6.1",
