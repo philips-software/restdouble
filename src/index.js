@@ -1,4 +1,4 @@
-import server from './server/server'
+import server from './server/server';
 
-exports.server = server
+exports.server = server;
 
