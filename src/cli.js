@@ -5,7 +5,7 @@ const program = require('commander');
 const server = require('./server/server');
 
 program
-    .version('0.0.1', '-v, --version')
+    .version('0.0.4', '-v, --version')
     .option('-a, --api [file]', 'give path to REST API description file')
     .option('-j, --hooks [file]', 'give path to hook methods file')
     .option('-H, --host [host]', 'set service host', 'localhost')

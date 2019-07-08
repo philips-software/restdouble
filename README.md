@@ -153,8 +153,40 @@ Options:
     -j, --hooks [file]  give path to hook methods file
     -H, --host [host]   set service host (default: "localhost")
     -p, --port [port]   set service port (default: 3000)
-    -N, --nocors        disable CORS
+    -N, --nocors        disable CORS (default: enabled)
     -h, --help          output usage information
+
+## Usage with JavaScript
+
+You can use restdouble in scripts through two exposed methods: **start()** and **stop()**. 
+
+To start the server:
+
+    var server = require('restdouble').server;
+
+    var params = {
+      api: 'api.yaml',
+      hooks: 'hooks.js',
+    };
+
+    server.start(params, ()=> {
+      console.log('Server started.');
+    });
+
+You can set and pass the following parameters to the start method:
+
+    api:    path to REST API description file
+    hooks:  path to hook methods file
+    host:   service host (default: "localhost")
+    port:   service port (default: 3000)
+    cors:   enable cors  (default: false)
+
+To stop the server:
+
+    server.stop(()=> {
+      console.log('Server stopped.');
+    });
+
 
 ## Docker
 

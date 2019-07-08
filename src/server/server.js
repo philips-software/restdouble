@@ -37,7 +37,7 @@ function loadModule(hookFile) {
     return hooks;
 }
 
-function start(params) {
+function start(params, callback) {
     const host = params.host || 'localhost';
     const port = Number(params.port) || 3000;
     const apiFile = params.api;
@@ -55,14 +55,28 @@ function start(params) {
     server.listen(port, host, (err) => {
         if (err) {
             console.error(err.message);
-            return;
+        } else {
+            console.log(`Server is listening on ${host}:${port}`);
         }
-        console.log(`Server is listening on ${host}:${port}`);
+
+        if (callback) {
+            callback(err);
+        }
     });
 }
 
-function stop() {
-    server.close();
+function stop(callback) {
+    server.close((err) => {
+        if (err) {
+            console.error(err.message);
+        } else {
+            console.log('Server closed!');
+        }
+
+        if (callback) {
+            callback(err);
+        }
+    });
 }
 
 exports.start = start;
