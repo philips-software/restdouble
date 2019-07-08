@@ -13,16 +13,16 @@ const fixturesDir = path.normalize(path.join(__dirname, '..', 'fixtures'));
 
 describe('e2e tests', function () {
     describe('api description with flexible http methods', function () {
-        before(() => {
+        before((done) => {
             const params = {
                 'api': path.join(fixturesDir, 'api.yaml'),
                 'hooks': path.join(fixturesDir, 'hooks.js'),
             };
-            server.start(params);
+            server.start(params, ()=> {done();});
         });
 
-        after(() => {
-            server.stop();
+        after((done) => {
+            server.stop(() => {done();});
         });
 
         describe('success scenarios', function () {
@@ -86,15 +86,15 @@ describe('e2e tests', function () {
     });
 
     describe('api description with http methods defined', function () {
-        before(() => {
+        before((done) => {
             const params = {
                 'api': path.join(fixturesDir, 'api_methods.yaml')
             };
-            server.start(params);
+            server.start(params, ()=> {done();});
         });
 
-        after(() => {
-            server.stop();
+        after((done) => {
+            server.stop(() => {done();});
         });
 
         describe('success scenarios', function () {
