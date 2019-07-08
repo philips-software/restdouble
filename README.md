@@ -29,12 +29,12 @@ Run a fake REST service to use as a [test double](https://martinfowler.com/bliki
 
 Each item defines a route, which can have the following keys: 
 
-        path: REST resource defining the route (default: '/')
-        method: HTTP method name (default: 'ANY')
-        status: HTTP response code (default: 200)
-        file: Path to a file to be served
+        path:     REST resource defining the route (default: '/')
+        method:   HTTP method name (default: 'ANY')
+        status:   HTTP response code (default: 200)
+        file:     Path to a file to be served
         response: String or JSON object to be served
-        hook: Name of the custom request handler method
+        hook:     Name of the custom request handler method
 
 See the [Section](#define-hook-methods) on defining hook methods for more information.
 
@@ -97,7 +97,7 @@ Define and export functions in a JavaScript file.
     // hooks.js
     function token(request, response) {
         response.writeHead(200, { 'Content-Type': 'text/plain' });
-        response.write(QxoXtkmYk5);
+        response.write('QxoXtkmYk5');
         response.end();
     }
 
@@ -160,7 +160,7 @@ Options:
 
 You can use restdouble in scripts through two exposed methods: **start()** and **stop()**. 
 
-To start the server:
+To start a server:
 
     var server = require('restdouble').server;
 
