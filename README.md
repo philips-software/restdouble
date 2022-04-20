@@ -4,6 +4,8 @@ Run a fake REST service to use as a [test double](https://martinfowler.com/bliki
 
 **restdouble** allows to serve string, JSON, and binary data through easy configuration.
 
+> ⚠️ This project is no longer supported.
+
 ## Quick Start
 
 ### Install **restdouble** 
